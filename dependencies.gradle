@@ -1,0 +1,6 @@
+ext.versions = [
+        compileSdk  : 26,
+        minSdk      : 21,
+        buildTools  : '26.0.1',
+        supportLib  : '26.1.0'
+]
