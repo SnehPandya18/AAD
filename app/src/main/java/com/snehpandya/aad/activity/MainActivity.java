@@ -1,15 +1,18 @@
 package com.snehpandya.aad.activity;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -23,8 +26,9 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private NavigationView mNavigationView;
-    private android.support.v7.widget.Toolbar mToolbar;
+    private Toolbar mToolbar;
     private FragmentTransaction mFragmentTransaction;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.mipmap.ic_launcher_foreground);
+        mToolbar.setNavigationIcon(R.mipmap.ic_launcher_round);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
@@ -44,8 +48,13 @@ public class MainActivity extends AppCompatActivity {
 
         View headerLayout = mNavigationView.getHeaderView(0);
 
-        mFragmentTransaction = getFragmentManager().beginTransaction();
+        mFragmentTransaction = getSupportFragmentManager().beginTransaction();
         mFragmentTransaction.add(R.id.framelayout, new FirstFragment()).commit();
+
+        mSharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt("page", 1);
+        editor.apply();
     }
 
     private void setupDrawer(NavigationView navigationView) {
@@ -81,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.framelayout, fragment).commit();
 
         menuItem.setChecked(true);
