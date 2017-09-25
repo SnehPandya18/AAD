@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import com.snehpandya.aad.R;
 import com.snehpandya.aad.databinding.ViewpagerFragmentBinding;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 /**
  * Created by sneh.pandya on 25/09/17.
  */
@@ -18,11 +21,13 @@ import com.snehpandya.aad.databinding.ViewpagerFragmentBinding;
 public class SecondViewPagerFragment extends Fragment {
 
     private ViewpagerFragmentBinding mViewpagerFragmentBinding;
+    private Date mDate = new Date();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mViewpagerFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.viewpager_fragment, container, false);
+        mViewpagerFragmentBinding.textViewpager.setText(DateFormat.getDateInstance().format(mDate.getTime()));
         return mViewpagerFragmentBinding.getRoot();
     }
 }

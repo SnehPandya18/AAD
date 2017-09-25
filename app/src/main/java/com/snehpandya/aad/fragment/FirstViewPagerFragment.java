@@ -23,6 +23,7 @@ public class FirstViewPagerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mViewpagerFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.viewpager_fragment, container, false);
+        mViewpagerFragmentBinding.textViewpager.setText(getResources().getString(R.string.hello_world));
         return mViewpagerFragmentBinding.getRoot();
     }
 }
