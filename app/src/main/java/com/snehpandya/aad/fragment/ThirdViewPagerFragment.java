@@ -12,6 +12,7 @@ import com.snehpandya.aad.R;
 import com.snehpandya.aad.databinding.ViewpagerFragmentBinding;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Created by sneh.pandya on 25/09/17.
@@ -20,13 +21,13 @@ import java.text.NumberFormat;
 public class ThirdViewPagerFragment extends Fragment {
 
     private ViewpagerFragmentBinding mViewpagerFragmentBinding;
-    private Number mNumber = 1234.56789012345;
+    private Number mNumber = 1234567890;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mViewpagerFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.viewpager_fragment, container, false);
-        mViewpagerFragmentBinding.textViewpager.setText(NumberFormat.getInstance().format(mNumber));
+        mViewpagerFragmentBinding.textViewpager.setText(NumberFormat.getInstance(Locale.getDefault()).format(mNumber));
         return mViewpagerFragmentBinding.getRoot();
     }
 }

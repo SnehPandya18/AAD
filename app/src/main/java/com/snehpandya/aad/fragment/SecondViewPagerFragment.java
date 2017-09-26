@@ -13,6 +13,7 @@ import com.snehpandya.aad.databinding.ViewpagerFragmentBinding;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by sneh.pandya on 25/09/17.
@@ -27,7 +28,7 @@ public class SecondViewPagerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mViewpagerFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.viewpager_fragment, container, false);
-        mViewpagerFragmentBinding.textViewpager.setText(DateFormat.getDateInstance().format(mDate.getTime()));
+        mViewpagerFragmentBinding.textViewpager.setText(DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(mDate.getTime()));
         return mViewpagerFragmentBinding.getRoot();
     }
 }
