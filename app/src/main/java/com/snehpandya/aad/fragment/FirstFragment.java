@@ -1,11 +1,14 @@
 package com.snehpandya.aad.fragment;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,15 +33,18 @@ import retrofit2.Callback;
 
 public class FirstFragment extends Fragment {
 
-    private int page = 1;
+    private int page;
     private MoviesAdapter mMoviesAdapter;
     private FragmentOneBinding binding;
+    private SharedPreferences mSharedPreferences;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_one, container, false);
-
+        mSharedPreferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+        page = mSharedPreferences.getInt("page", 1);
+        Log.d("TAG", "onCreateView: page: " + page);
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,7 +56,7 @@ public class FirstFragment extends Fragment {
 
     private void showMovies(int page) {
         RetrofitAPI retrofitAPI = new RetrofitAPI();
-        Call<Response> response = retrofitAPI.mTMDBApi.popularResponse("YOUR_API_KEY", page);
+        Call<Response> response = retrofitAPI.mTMDBApi.popularResponse("20538a1ec60bfd1df41d9b08e00e26e8", page);
         response.enqueue(new Callback<Response>() {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {

@@ -2,8 +2,10 @@ package com.snehpandya.aad.activity;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,7 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,11 +22,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.snehpandya.aad.R;
+import com.snehpandya.aad.dialog.EditNameDialog;
 import com.snehpandya.aad.fragment.FirstFragment;
 import com.snehpandya.aad.fragment.SecondFragment;
 import com.snehpandya.aad.fragment.ThirdFragment;
+import com.snehpandya.aad.service.MyTestService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +40,16 @@ public class MainActivity extends AppCompatActivity {
     private FragmentTransaction mFragmentTransaction;
     private SharedPreferences mSharedPreferences;
     private NotificationCompat.Builder mBuilder;
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int resultCode = intent.getIntExtra("resultCode", RESULT_CANCELED);
+            if (resultCode == RESULT_OK) {
+                String resultValue = intent.getStringExtra("resultValue");
+                Toast.makeText(context, resultValue, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         showNotification();
+
+        showAlertDialog();
+
+        launchService();
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -61,8 +80,20 @@ public class MainActivity extends AppCompatActivity {
 
         mSharedPreferences = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putInt("page", 1);
+        editor.putInt("page", 3);
         editor.apply();
+    }
+
+    private void launchService() {
+        Intent intent = new Intent(this, MyTestService.class);
+        intent.putExtra("Hello", "World");
+        startService(intent);
+    }
+
+    private void showAlertDialog() {
+        FragmentManager manager = getSupportFragmentManager();
+        EditNameDialog nameDialog = EditNameDialog.newInstance("Dialog");
+        nameDialog.show(manager, "fragment_alert");
     }
 
     private void setupDrawer(NavigationView navigationView) {
@@ -81,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         int flags = PendingIntent.FLAG_CANCEL_CURRENT;
         PendingIntent pendingIntent = PendingIntent.getActivity(this, requestID, intent, flags);
 
-                mBuilder = new NotificationCompat.Builder(this)
+        mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher_foreground)
                 .setContentTitle("My Notification")
                 .setContentText("Hello world!")
@@ -124,6 +155,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter(MyTestService.ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -131,5 +175,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public String getHelloWorld() {
+        return "Hello world";
     }
 }
