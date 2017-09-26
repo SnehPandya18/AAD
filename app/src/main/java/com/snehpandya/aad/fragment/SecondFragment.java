@@ -1,8 +1,11 @@
 package com.snehpandya.aad.fragment;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.snehpandya.aad.R;
+import com.snehpandya.aad.activity.DeleteActivity;
 import com.snehpandya.aad.adapter.MoviesCursorAdapter;
 import com.snehpandya.aad.database.MovieContract;
 import com.snehpandya.aad.databinding.FragmentTwoBinding;
@@ -24,7 +28,7 @@ import com.snehpandya.aad.databinding.FragmentTwoBinding;
  * Created by Sneh on 24-09-2017.
  */
 
-public class SecondFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
+public class SecondFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final int MOVIE_LOADER = 0;
     private final String VALUE_KEY = "saved";
@@ -44,6 +48,16 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
             Toast.makeText(getContext(), "stateValue is null!", Toast.LENGTH_SHORT).show();
         }
 
+        binding.list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getContext(), DeleteActivity.class);
+                Uri uri = ContentUris.withAppendedId(MovieContract.MovieEntry.CONTENT_URI, l);
+                intent.setData(uri);
+                startActivity(intent);
+            }
+        });
+
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,7 +68,6 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
         mMoviesCursorAdapter = new MoviesCursorAdapter(getActivity(), null);
         binding.list.setAdapter(mMoviesCursorAdapter);
 
-        binding.list.setOnItemClickListener(this);
 
         getLoaderManager().initLoader(MOVIE_LOADER, null, SecondFragment.this);
         return binding.getRoot();
@@ -62,8 +75,8 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
 
     private void updateRow() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, "Movie New");
-        contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW, "This is a new movie.");
+        contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, "New Movie!");
+        contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW, "This is a new movie. The content is yet to be released.");
 
         mCursor.moveToLast();
         mCursor.getPosition();
@@ -90,12 +103,6 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mMoviesCursorAdapter.swapCursor(null);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        String movie = String.valueOf(adapterView.getItemAtPosition(i));
-        Toast.makeText(getContext(), "Movie Provider data: " + movie, Toast.LENGTH_SHORT).show();
     }
 
     @Override
