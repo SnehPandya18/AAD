@@ -3,6 +3,10 @@ package com.snehpandya.aad.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.snehpandya.aad.R;
 
@@ -12,9 +16,24 @@ import com.snehpandya.aad.R;
 
 public class SecondActivity extends AppCompatActivity {
 
+    private EditText mEditText;
+    private TextView mTextView;
+    private Button mButton;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
+
+        mEditText = (EditText) findViewById(R.id.edittext_name);
+        mButton = (Button) findViewById(R.id.btn_second);
+        mTextView = (TextView) findViewById(R.id.text_name_second);
+
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mTextView.setText(mEditText.getText().toString());
+            }
+        });
     }
 }
