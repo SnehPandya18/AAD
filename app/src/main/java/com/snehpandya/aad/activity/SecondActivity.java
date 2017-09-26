@@ -18,6 +18,7 @@ public class SecondActivity extends AppCompatActivity {
 
     private EditText mEditText;
     private TextView mTextView;
+    private TextView mTextView2;
     private Button mButton;
 
     @Override
@@ -28,6 +29,9 @@ public class SecondActivity extends AppCompatActivity {
         mEditText = (EditText) findViewById(R.id.edittext_name);
         mButton = (Button) findViewById(R.id.btn_second);
         mTextView = (TextView) findViewById(R.id.text_name_second);
+        mTextView2 = (TextView) findViewById(R.id.text_hello);
+
+        mTextView2.setText("Hello World!");
 
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override

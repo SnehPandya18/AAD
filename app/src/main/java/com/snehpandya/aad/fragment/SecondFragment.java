@@ -29,11 +29,19 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
     public static final int MOVIE_LOADER = 0;
     MoviesCursorAdapter mMoviesCursorAdapter;
     FragmentTwoBinding binding;
+    private int stateValue = 100;
+    private final String VALUE_KEY = "saved";
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_two, container, false);
+        if (savedInstanceState != null) {
+            stateValue = savedInstanceState.getInt(VALUE_KEY);
+            Toast.makeText(getContext(), "stateValue: " + stateValue, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "stateValue is null!", Toast.LENGTH_SHORT).show();
+        }
 
         mMoviesCursorAdapter = new MoviesCursorAdapter(getActivity(), null);
         binding.list.setAdapter(mMoviesCursorAdapter);
@@ -70,5 +78,11 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         String movie = String.valueOf(adapterView.getItemAtPosition(i));
         Toast.makeText(getContext(), "Movie Provider data: " + movie, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(VALUE_KEY, stateValue);
+        super.onSaveInstanceState(outState);
     }
 }
