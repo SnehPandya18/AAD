@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,13 +43,28 @@ public class FirstFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_one, container, false);
+
         mSharedPreferences = this.getActivity().getPreferences(Context.MODE_PRIVATE);
         page = mSharedPreferences.getInt("page", 1);
         Log.d("TAG", "onCreateView: page: " + page);
+
+        binding.swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                showMovies(page);
+            }
+        });
+
+        binding.swipe.setColorSchemeResources(R.color.colorAccent,
+                R.color.colorPrimary,
+                R.color.colorAccent,
+                R.color.colorPrimaryDark);
+
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showMovies(page);
+                binding.fab.hide();
             }
         });
         return binding.getRoot();
@@ -67,6 +83,8 @@ public class FirstFragment extends Fragment {
 
                     deleteMovies();
                     insertMovies(response1.getResults());
+
+                    binding.swipe.setRefreshing(false);
                 }
             }
 

@@ -1,5 +1,6 @@
 package com.snehpandya.aad.fragment;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -8,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +27,11 @@ import com.snehpandya.aad.databinding.FragmentTwoBinding;
 public class SecondFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
 
     public static final int MOVIE_LOADER = 0;
-    MoviesCursorAdapter mMoviesCursorAdapter;
-    FragmentTwoBinding binding;
-    private int stateValue = 100;
     private final String VALUE_KEY = "saved";
+    private MoviesCursorAdapter mMoviesCursorAdapter;
+    private Cursor mCursor;
+    private FragmentTwoBinding binding;
+    private int stateValue = 100;
 
     @Nullable
     @Override
@@ -43,6 +44,13 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
             Toast.makeText(getContext(), "stateValue is null!", Toast.LENGTH_SHORT).show();
         }
 
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateRow();
+            }
+        });
+
         mMoviesCursorAdapter = new MoviesCursorAdapter(getActivity(), null);
         binding.list.setAdapter(mMoviesCursorAdapter);
 
@@ -50,6 +58,16 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
 
         getLoaderManager().initLoader(MOVIE_LOADER, null, SecondFragment.this);
         return binding.getRoot();
+    }
+
+    private void updateRow() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, "Movie New");
+        contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW, "This is a new movie.");
+
+        mCursor.moveToLast();
+        mCursor.getPosition();
+        int uri = getContext().getContentResolver().update(MovieContract.MovieEntry.CONTENT_URI, contentValues, String.valueOf(mCursor.getPosition()), null);
     }
 
     @Override
@@ -65,8 +83,8 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        Log.d("TAG", "onLoadFinished: " + cursor.getCount());
         mMoviesCursorAdapter.swapCursor(cursor);
+        this.mCursor = cursor;
     }
 
     @Override
