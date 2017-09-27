@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Created by sneh.pandya on 26/09/17.
@@ -27,8 +26,7 @@ public class MyTestService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        Toast.makeText(this, "IntentService started", Toast.LENGTH_SHORT).show();
-        Log.d("TAG", "onHandleIntent: started");
+        Log.d("TAG", "onHandleIntent: IntentService started");
         String value = intent.getStringExtra("Hello");
         Intent intent1 = new Intent(ACTION);
         intent1.putExtra("resultCode", Activity.RESULT_OK);

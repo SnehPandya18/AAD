@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.widget.EditText;
 import android.widget.Toast;
 
 /**
@@ -15,9 +14,8 @@ import android.widget.Toast;
 
 public class EditNameDialog extends DialogFragment {
 
-    private EditText mEditText;
-
-    public EditNameDialog() {}
+    public EditNameDialog() {
+    }
 
     public static EditNameDialog newInstance(String title) {
         EditNameDialog fragment = new EditNameDialog();
@@ -37,13 +35,14 @@ public class EditNameDialog extends DialogFragment {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(getContext(), "OK!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "OK clicked", Toast.LENGTH_SHORT).show();
             }
         });
 
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(getContext(), "Cancel clicked", Toast.LENGTH_SHORT).show();
                 if (dialogInterface != null) {
                     dismiss();
                 }

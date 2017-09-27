@@ -20,9 +20,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.snehpandya.aad.R;
 import com.snehpandya.aad.dialog.EditNameDialog;
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             int resultCode = intent.getIntExtra("resultCode", RESULT_CANCELED);
             if (resultCode == RESULT_OK) {
                 String resultValue = intent.getStringExtra("resultValue");
-                Toast.makeText(context, resultValue, Toast.LENGTH_SHORT).show();
+                Log.d("TAG", "onReceive: BroadcastReceiver resultValue: " + resultValue);
             }
         }
     };
